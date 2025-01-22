@@ -93,27 +93,27 @@ def print_global_state(zone: list[list[int]], rover_A: tuple[int, int, str], rov
     for row in display_zone : 
         print("\t".join(str(cell) for cell in row)+"\n")
 
+#####
+# Main Scenario
+#####
+if __name__ == "__main__":
+    # Initialisation
+    zoneSize = int(input("Précisez la taille de la plateforme : "))
+    rover_A = init_rover(input("Initialisez la position et l'orientation de Rover A (format : x y orientation) : "))
+    rover_B = init_rover(input("Initialisez la position et l'orientation de Rover B (format : x y orientation) : "))
 
+    zone = initialize_zone(zoneSize)
 
-# Initialisation
-zoneSize = int(input("Précisez la taille de la plateforme : "))
-rover_A = init_rover(input("Initialisez la position et l'orientation de Rover A (format : x y orientation) : "))
-rover_B = init_rover(input("Initialisez la position et l'orientation de Rover B (format : x y orientation) : "))
+    # Affichage Initialisation
+    print(rover_toString(rover_A))
+    print(rover_toString(rover_B))
+    print_global_state(zone, rover_A, rover_B)
 
-zone = initialize_zone(zoneSize)
+    # Interactions
+    rover_A = move_rover(zoneSize, rover_A, input("Commandez le rover A : "))
+    rover_B = move_rover(zoneSize, rover_B, input("Commandez le rover B : "))
 
-# Affichage Initialisation
-#print_zone(zone)
-print(rover_toString(rover_A))
-print(rover_toString(rover_B))
-print_global_state(zone, rover_A, rover_B)
-
-# Interactions
-
-rover_A = move_rover(zoneSize, rover_A, input("Commandez le rover A : "))
-rover_B = move_rover(zoneSize, rover_B, input("Commandez le rover B : "))
-
-# Result
-print(rover_toString(rover_A))
-print(rover_toString(rover_B))
-print_global_state(zone, rover_A, rover_B)
+    # Result
+    print(rover_toString(rover_A))
+    print(rover_toString(rover_B))
+    print_global_state(zone, rover_A, rover_B)
