@@ -1,5 +1,9 @@
 from typing import List, Tuple, Union
 
+#####
+# Zone
+#####
+
 def initialize_zone(size: int) -> List[List[Union[int, str]]]:
     if size <= 0:
         raise ValueError("La taille du plateau doit être un entier positif.")
@@ -9,7 +13,11 @@ def print_zone(zone: List[List[int]]) -> None:
     for row in reversed(zone):  # Inverse les lignes pour que (0, 0) soit en bas
         print("\t".join(map(str, row))+"\n")
 
-def parse_rover_input(user_input: str) -> Tuple[int, int, str]:
+#####
+# Rover
+#####
+
+def init_rover(user_input: str) -> Tuple[int, int, str]:
     try:
         parts = user_input.strip().split()
         if len(parts) != 3:
@@ -26,6 +34,50 @@ def parse_rover_input(user_input: str) -> Tuple[int, int, str]:
     except ValueError as e:
         raise ValueError(f"Erreur lors de l'initialisation du rover : {e}")
     
+def rover_toString(rover: tuple[int, int, str]) -> str:
+    x, y, orientation = rover
+    return f"{x} {y} {orientation}"
+
+    
+def move_rover(zone_size: int, rover: tuple[int, int, str], commands: str) -> tuple[int, int, str]:
+    x, y, orientation = rover
+
+    # Dictionnaire pour déterminer la nouvelle orientation après un pivot
+    orientation_map = {
+        'N': {'L': 'W', 'R': 'E'},
+        'E': {'L': 'N', 'R': 'S'},
+        'S': {'L': 'E', 'R': 'W'},
+        'W': {'L': 'S', 'R': 'N'}
+    }
+
+    # Dictionnaire pour les mouvements en fonction de l'orientation
+    movement_map = {
+        'N': (0, 1),  # Déplacement vers le haut
+        'E': (1, 0),  # Déplacement vers la droite
+        'S': (0, -1), # Déplacement vers le bas
+        'W': (-1, 0)  # Déplacement vers la gauche
+    }
+
+    # Parcourir les commandes et les exécuter
+    for command in commands:
+        if command == 'L' or command == 'R':
+            orientation = orientation_map[orientation][command]
+        elif command == 'M':
+            dx, dy = movement_map[orientation]
+            new_x, new_y = x + dx, y + dy
+            
+            if 0 <= new_x < zone_size and 0 <= new_y < zone_size:
+                x, y = new_x, new_y
+            #else:
+            #    print(f"Le rover a atteint une limite à ({x}, {y}), mouvement ignoré.")
+        #else:
+            #print(f"Commande inconnue : {command}, ignorée.")
+
+    return x, y, orientation
+
+#####
+# Global
+#####    
 def print_global_state(zone: list[list[int]], rover_A: tuple[int, int, str], rover_B: tuple[int, int, str]) -> None:
     size = len(zone)
     
@@ -45,12 +97,23 @@ def print_global_state(zone: list[list[int]], rover_A: tuple[int, int, str], rov
 
 # Initialisation
 zoneSize = int(input("Précisez la taille de la plateforme : "))
-rover_A = parse_rover_input(input("Initialisez la position et l'orientation de Rover A (format : x y z) : "))
-rover_B = parse_rover_input(input("Initialisez la position et l'orientation de Rover B (format : x y z) : "))
+rover_A = init_rover(input("Initialisez la position et l'orientation de Rover A (format : x y orientation) : "))
+rover_B = init_rover(input("Initialisez la position et l'orientation de Rover B (format : x y orientation) : "))
 
 zone = initialize_zone(zoneSize)
 
 # Affichage Initialisation
 #print_zone(zone)
+print(rover_toString(rover_A))
+print(rover_toString(rover_B))
 print_global_state(zone, rover_A, rover_B)
 
+# Interactions
+
+rover_A = move_rover(zoneSize, rover_A, input("Commandez le rover A : "))
+rover_B = move_rover(zoneSize, rover_B, input("Commandez le rover B : "))
+
+# Result
+print(rover_toString(rover_A))
+print(rover_toString(rover_B))
+print_global_state(zone, rover_A, rover_B)
