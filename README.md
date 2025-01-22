@@ -38,7 +38,11 @@ Valentin Chrétien
 ## Tests - nasaRover_test.py
 
 Commande d'execution des tests unitaires (suite de 10 tests) : 
-```python -m unittest nasaRover_test-unitaire.py```
+```bash 
+python -m unittest nasaRover_test-unitaire.py
+```
 
 Commande d'execution du tests de scenario (1 test) : 
-```python -m unittest nasaRover_test-scenario.py```
+```bash 
+python -m unittest nasaRover_test-scenario.py
+```
